@@ -12,7 +12,7 @@ print('       Neumann L., Matas J.: Real-Time Scene Text Localization and Recogn
 
 pathname = os.path.dirname(sys.argv[0])
 
-img = cv.imread("1.jpeg")
+img = cv.imread("1.jpg")
 # for visualization
 vis = img.copy()
 

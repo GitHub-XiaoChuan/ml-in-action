@@ -13,5 +13,5 @@ plt.subplot(1, 2, 1)
 plt.imshow(img, 'gray')
 plt.subplot(1, 2, 2)
 plt.imshow(filter_img, 'gray')
-
+plt.show()
 print('end')
