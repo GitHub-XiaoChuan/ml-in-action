@@ -26,7 +26,12 @@ def load_dataset(filedir):
         image_data_list.append(img_to_array(image))
 
         # 解析分值
-        label.append(img.split("_")[1])
+        sex = img.split("_")[1]
+        if sex == "M":
+            sex = 0
+        else:
+            sex = 1
+        label.append(sex)
 
     img_data = np.array(image_data_list)
     img_data = img_data.astype('float32')
