@@ -57,22 +57,22 @@ class WideResNet:
                         convs = Activation("relu")(convs)
 
                     convs = Conv2D(n_bottleneck_plane, kernel_size=(v[0], v[1]),
-                                          strides=v[2],
-                                          padding=v[3],
-                                          kernel_initializer=self._weight_init,
-                                          kernel_regularizer=l2(self._weight_decay),
-                                          use_bias=self._use_bias)(convs)
+                                   strides=v[2],
+                                   padding=v[3],
+                                   kernel_initializer=self._weight_init,
+                                   kernel_regularizer=l2(self._weight_decay),
+                                   use_bias=self._use_bias)(convs)
                 else:
                     convs = BatchNormalization(axis=self._channel_axis)(convs)
                     convs = Activation("relu")(convs)
                     if self._dropout_probability > 0:
                         convs = Dropout(self._dropout_probability)(convs)
                     convs = Conv2D(n_bottleneck_plane, kernel_size=(v[0], v[1]),
-                                          strides=v[2],
-                                          padding=v[3],
-                                          kernel_initializer=self._weight_init,
-                                          kernel_regularizer=l2(self._weight_decay),
-                                          use_bias=self._use_bias)(convs)
+                                   strides=v[2],
+                                   padding=v[3],
+                                   kernel_initializer=self._weight_init,
+                                   kernel_regularizer=l2(self._weight_decay),
+                                   use_bias=self._use_bias)(convs)
 
             # Shortcut Connection: identity function or 1x1 convolutional
             #  (depends on difference between input & output shape - this
@@ -80,18 +80,17 @@ class WideResNet:
             #   group; see _layer() ).
             if n_input_plane != n_output_plane:
                 shortcut = Conv2D(n_output_plane, kernel_size=(1, 1),
-                                         strides=stride,
-                                         padding="same",
-                                         kernel_initializer=self._weight_init,
-                                         kernel_regularizer=l2(self._weight_decay),
-                                         use_bias=self._use_bias)(net)
+                                  strides=stride,
+                                  padding="same",
+                                  kernel_initializer=self._weight_init,
+                                  kernel_regularizer=l2(self._weight_decay),
+                                  use_bias=self._use_bias)(net)
             else:
                 shortcut = net
 
             return add([convs, shortcut])
 
         return f
-
 
     # "Stacking Residual Units on the same stage"
     def _layer(self, block, n_input_plane, n_output_plane, count, stride):
@@ -103,7 +102,7 @@ class WideResNet:
 
         return f
 
-#    def create_model(self):
+    #    def create_model(self):
     def __call__(self):
         logging.debug("Creating model...")
 
@@ -115,17 +114,20 @@ class WideResNet:
         n_stages = [16, 16 * self._k, 32 * self._k, 64 * self._k]
 
         conv1 = Conv2D(filters=n_stages[0], kernel_size=(3, 3),
-                              strides=(1, 1),
-                              padding="same",
-                              kernel_initializer=self._weight_init,
-                              kernel_regularizer=l2(self._weight_decay),
-                              use_bias=self._use_bias)(inputs)  # "One conv at the beginning (spatial size: 32x32)"
+                       strides=(1, 1),
+                       padding="same",
+                       kernel_initializer=self._weight_init,
+                       kernel_regularizer=l2(self._weight_decay),
+                       use_bias=self._use_bias)(inputs)  # "One conv at the beginning (spatial size: 32x32)"
 
         # Add wide residual blocks
         block_fn = self._wide_basic
-        conv2 = self._layer(block_fn, n_input_plane=n_stages[0], n_output_plane=n_stages[1], count=n, stride=(1, 1))(conv1)
-        conv3 = self._layer(block_fn, n_input_plane=n_stages[1], n_output_plane=n_stages[2], count=n, stride=(2, 2))(conv2)
-        conv4 = self._layer(block_fn, n_input_plane=n_stages[2], n_output_plane=n_stages[3], count=n, stride=(2, 2))(conv3)
+        conv2 = self._layer(block_fn, n_input_plane=n_stages[0], n_output_plane=n_stages[1], count=n, stride=(1, 1))(
+            conv1)
+        conv3 = self._layer(block_fn, n_input_plane=n_stages[1], n_output_plane=n_stages[2], count=n, stride=(2, 2))(
+            conv2)
+        conv4 = self._layer(block_fn, n_input_plane=n_stages[2], n_output_plane=n_stages[3], count=n, stride=(2, 2))(
+            conv3)
         batch_norm = BatchNormalization(axis=self._channel_axis)(conv4)
         relu = Activation("relu")(batch_norm)
 
@@ -143,41 +145,93 @@ class WideResNet:
         return model
 
 
+known_face_encodings = []
+known_face_names = []
+
+
+def load_face_encodings(path):
+    encoding_lines = []
+    with open(path, 'r') as f:
+        encoding_lines = f.readlines()
+
+    for encoding_line in encoding_lines:
+        arr = encoding_line.strip('\n').split(' ')
+        known_face_names.append(arr[0])
+        known_face_encodings.append([float(x) for x in arr[1:]])
+
+    None
+
+def face_matches(face_encodings):
+    face_names = []
+    for face_encoding in face_encodings:
+        matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.3)
+
+        if True in matches:
+            first_match_index = matches.index(True)
+            name = known_face_names[first_match_index]
+        else:
+            # name = len(known_face_names)+1000
+            # known_face_encodings.append(face_encoding)
+            # known_face_names.append(name)
+
+            name = 'unknow'
+
+        face_names.append(name)
+    return face_names
+
+
 def main():
-    model = WideResNet(64)()
-    model.summary()
-
-
-def recognition():
     camera = cv2.VideoCapture(0)
-    font = cv2.FONT_HERSHEY_DUPLEX
+
+    #load_face_encodings('db.txt')
+    load_face_encodings('db2.txt')
+
+    print("底库名字总共 %d 个" % len(known_face_names))
+    print("底库编码总共 %d 个" % len(known_face_encodings))
+
+    face_locations = []
+    face_encodings = []
 
     while True:
         ret, frame = camera.read()
-        face_locations = face_recognition.face_locations(frame)
+        small_frame = cv2.resize(frame, (0, 0), fx=0.2, fy=0.2)
+        rgb_small_frame = small_frame[:, :, ::-1]  # BGR转RGB
 
-        for (top, right, bottom, left) in face_locations:
+        face_locations = face_recognition.face_locations(rgb_small_frame)
+        face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations, num_jitters=10)
+        face_names = face_matches(face_encodings)
+
+        for (top, right, bottom, left), name in zip(face_locations, face_names):
+            top *= 5
+            right *= 5
+            bottom *= 5
+            left *= 5
+
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
-            image128 = cv2.resize(frame[top:bottom, left:right], (128, 128))
-            images = np.array(image128).reshape(1, 128, 128, 3)
+            # image128 = cv2.resize(frame[top:bottom, left:right], (128, 128))
+            # images = np.array(image128).reshape(1, 128, 128, 3)
 
-            score = score_model.predict_classes(images)
+            # score = score_model.predict_classes(images)
             # sex = sex_model.predict_classes(images)
 
-            image64 = cv2.resize(frame[top:bottom, left:right], (64, 64))
-            images = np.array(image64).reshape(1, 64, 64, 3)
-            results = model.predict(images)
+            # image64 = cv2.resize(frame[top:bottom, left:right], (64, 64))
+            # images = np.array(image64).reshape(1, 64, 64, 3)
+            # results = model.predict(images)
+            #
+            # predicted_genders = results[0]
+            # ages = np.arange(0, 101).reshape(101, 1)
+            # predicted_ages = results[1].dot(ages).flatten()
 
-            predicted_genders = results[0]
-            ages = np.arange(0, 101).reshape(101, 1)
-            predicted_ages = results[1].dot(ages).flatten()
-
-            cv2.putText(frame, "Score:%d %s %d" % (
-                score,
-                "F" if predicted_genders[0][0] > 0.5 else "M",
-                int(predicted_ages[0])-10
-            ), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            # cv2.putText(frame, "%d %s %d %d" % (
+            #     score,
+            #     "F" if predicted_genders[0][0] > 0.5 else "M",
+            #     int(predicted_ages[0])-10,
+            #     name
+            # ), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+            cv2.putText(frame, str(name), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
         cv2.imshow("video", frame)
 
@@ -189,11 +243,10 @@ def recognition():
 
 
 score_model = load_model('faceRank.h5')
-#sex_model = load_model('faceSex.h5')
+# sex_model = load_model('faceSex.h5')
 
 model = WideResNet(64, depth=16, k=8)()
 model.load_weights('weights.28-3.73.hdf5')
 
-
 if __name__ == '__main__':
-    recognition()
+    main()
