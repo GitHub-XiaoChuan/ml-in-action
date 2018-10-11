@@ -3,6 +3,7 @@ from keras.layers.core import Dense, Dropout, Flatten, Activation
 from keras.layers.convolutional import Conv2D, MaxPooling2D
 from keras.preprocessing.image import load_img, img_to_array
 from keras.utils import np_utils
+from keras.callbacks import TensorBoard
 import os
 import numpy as np
 
@@ -48,9 +49,10 @@ train_x, train_y = load_dataset('data')
 train_y = np_utils.to_categorical(train_y, 10)
 model = make_network()
 
+board = TensorBoard(log_dir='/data1/logs/face_rank')
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
-hist = model.fit(train_x, train_y, batch_size=32, epochs=100, verbose=1)
+hist = model.fit(train_x, train_y, batch_size=32, epochs=100, verbose=1, callbacks=[board])
 
 model.evaluate(train_x,train_y)
 
