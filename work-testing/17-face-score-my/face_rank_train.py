@@ -10,6 +10,9 @@ import numpy as np
 def load_dataset(filedir):
     """
     读取数据
+
+    名字为：886_M_5.966666.jpg
+
     :param filedir:
     :return:
     """
@@ -20,7 +23,10 @@ def load_dataset(filedir):
         url = os.path.join(filedir + '/train/' + img)
         image = load_img(url, target_size=(128, 128))
         image_data_list.append(img_to_array(image))
-        label.append(img.split('-')[0])
+
+        # 解析分值
+        label.append(str(round(float(img.split("_")[2][:-4]))))
+
     img_data = np.array(image_data_list)
     img_data = img_data.astype('float32')
     img_data /= 255
@@ -43,7 +49,6 @@ def make_network():
     model.add(Activation('softmax'))
 
     return model
-
 
 train_x, train_y = load_dataset('data')
 train_y = np_utils.to_categorical(train_y, 10)
