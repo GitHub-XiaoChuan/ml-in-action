@@ -1,14 +1,14 @@
-import cv2
-import face_recognition
-from keras.models import load_model, Model
+# This code is imported from the following project: https://github.com/asmith26/wide_resnets_keras
+
+import logging
+import sys
+import numpy as np
+from keras.models import Model
 from keras.layers import Input, Activation, add, Dense, Flatten, Dropout
 from keras.layers.convolutional import Conv2D, AveragePooling2D
 from keras.layers.normalization import BatchNormalization
 from keras.regularizers import l2
 from keras import backend as K
-import numpy as np
-import sys
-import logging
 
 sys.setrecursionlimit(2 ** 20)
 np.random.seed(2 ** 10)
@@ -148,52 +148,5 @@ def main():
     model.summary()
 
 
-def recognition():
-    camera = cv2.VideoCapture(0)
-    font = cv2.FONT_HERSHEY_DUPLEX
-
-    while True:
-        ret, frame = camera.read()
-        face_locations = face_recognition.face_locations(frame)
-
-        for (top, right, bottom, left) in face_locations:
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            image128 = cv2.resize(frame[top:bottom, left:right], (128, 128))
-            images = np.array(image128).reshape(1, 128, 128, 3)
-
-            score = score_model.predict_classes(images)
-            # sex = sex_model.predict_classes(images)
-
-            image64 = cv2.resize(frame[top:bottom, left:right], (64, 64))
-            images = np.array(image64).reshape(1, 64, 64, 3)
-            results = model.predict(images)
-
-            predicted_genders = results[0]
-            ages = np.arange(0, 101).reshape(101, 1)
-            predicted_ages = results[1].dot(ages).flatten()
-
-            cv2.putText(frame, "Score:%d %s %d" % (
-                score,
-                "F" if predicted_genders[0][0] > 0.5 else "M",
-                int(predicted_ages[0])-10
-            ), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-
-        cv2.imshow("video", frame)
-
-        if cv2.waitKey(1) == ord("q"):
-            break
-
-    camera.release()
-    cv2.destroyAllWindows()
-
-
-score_model = load_model('faceRank.h5')
-#sex_model = load_model('faceSex.h5')
-
-model = WideResNet(64, depth=16, k=8)()
-model.load_weights('weights.28-3.73.hdf5')
-
-
 if __name__ == '__main__':
-    recognition()
+    main()
