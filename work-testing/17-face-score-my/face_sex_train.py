@@ -64,7 +64,7 @@ train_x, train_y = load_dataset('data')
 train_y = np_utils.to_categorical(train_y, 2)
 model = make_network()
 
-model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 hist = model.fit(train_x, train_y, batch_size=32, epochs=100, verbose=1)
 
 model.evaluate(train_x,train_y)
