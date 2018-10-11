@@ -12,6 +12,7 @@ def load_image(img_url):
     image = np.expand_dims(image,axis=0)
     return image
 
-image = load_image('data/test/9-1.jpg')
+image = load_image('data/train/2-112.jpg')
+#image = load_image('data/train/9-110.jpg')
 p = model.predict_classes(image)
 print(p)
