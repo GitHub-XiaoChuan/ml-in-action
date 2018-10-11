@@ -25,7 +25,7 @@ def load_dataset(filedir):
         image_data_list.append(img_to_array(image))
 
         # 解析分值
-        label.append(str(round(float(img.split("_")[2][:-4]))))
+        label.append(str(round(float(img.split("_")[2][:-4]))-1))
 
     img_data = np.array(image_data_list)
     img_data = img_data.astype('float32')
