@@ -164,7 +164,7 @@ def load_face_encodings(path):
 def face_matches(face_encodings):
     face_names = []
     for face_encoding in face_encodings:
-        matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.3)
+        matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.4)
 
         if True in matches:
             first_match_index = matches.index(True)
@@ -222,14 +222,14 @@ def main():
             # predicted_genders = results[0]
             # ages = np.arange(0, 101).reshape(101, 1)
             # predicted_ages = results[1].dot(ages).flatten()
-
+            #
             cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
-            # cv2.putText(frame, "%d %s %d %d" % (
+            # cv2.putText(frame, "%d %s %d %s" % (
             #     score,
             #     "F" if predicted_genders[0][0] > 0.5 else "M",
             #     int(predicted_ages[0])-10,
-            #     name
+            #     str(name)
             # ), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
             cv2.putText(frame, str(name), (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
