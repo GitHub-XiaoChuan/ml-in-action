@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 min_width = 20
 min_height = min_width
 
-image = cv2.imread("9.jpg")
+image = cv2.imread("010.jpg")
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 cv2.imshow("灰度图", gray)
 
@@ -49,13 +49,14 @@ for cnt in c:
     angle = rect[2]
     w,h = rect[1]
     if angle not in map(float,[0,90,-90]) and w>min_width and h>min_height:
+        print("%d %d %d" % (w, h, angle))
         if w < h:
             if angle > 0:
                 angle = angle - 90
             else:
                 angle = angle + 90
 
-        #print(angle)
+        # print(angle)
         # print(w>h)
         angles.append(angle)
         # if w > h:

@@ -5,8 +5,8 @@ import random
 import numpy as np
 from scipy import misc, ndimage
 
-img = cv2.imread('/Users/xingoo/PycharmProjects/ocr/test_images/9.jpg')
-gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+img = cv2.imread('9.jpg')
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,50,150,apertureSize = 3)
 
 #霍夫变换
