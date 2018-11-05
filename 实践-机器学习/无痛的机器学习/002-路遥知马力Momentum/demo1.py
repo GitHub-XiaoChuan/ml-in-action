@@ -22,15 +22,14 @@ def gd(x_start, step, g):
             break
     return x, passing_dot
 
-def momentum(x_start, step, g, discount=0.7):
+def momentum(x_start, e, g, a=0.7):
     x = np.array(x_start, dtype='float64')
     passing_dot = [x.copy()]
-    pre_grad = np.zeros_like(x)
+    v = np.zeros_like(x)
     for i in range(50):
         grad = g(x)
-        #pre_grad = pre_grad * discount + grad
-        pre_grad = pre_grad * discount - step * grad
-        x += pre_grad
+        v = a * v - e * grad
+        x += v
 
         passing_dot.append(x.copy())
         print('[ Epoch {0} ] grad = {1}, x = {2}'.format(i, grad, x))
@@ -73,7 +72,7 @@ def contour(X,Y,Z, arr = None):
             plt.plot(arr[i:i+2,0],arr[i:i+2,1])
     plt.show()
 
-# 原始图
+#原始图
 xi = np.linspace(-200, 200, 1000)
 yi = np.linspace(-100, 100, 1000)
 
@@ -81,18 +80,18 @@ X, Y = np.meshgrid(xi, yi)
 
 Z = X*X + 50*Y*Y
 contour(X,Y,Z)
-
-res, x_arr = gd([150, 75], 0.016, g)
-contour(X, Y, Z, x_arr)
-
-res, x_arr = gd([150,75], 0.019, g)
-contour(X,Y,Z, x_arr)
-
-res, x_arr = gd([150,75], 0.02, g)
-contour(X,Y,Z, x_arr)
+#
+# res, x_arr = gd([150, 75], 0.016, g)
+# contour(X, Y, Z, x_arr)
+#
+# res, x_arr = gd([150,75], 0.019, g)
+# contour(X,Y,Z, x_arr)
+#
+# res, x_arr = gd([150,75], 0.02, g)
+# contour(X,Y,Z, x_arr)
 
 res, x_arr = momentum([150,75], 0.016, g)
 contour(X,Y,Z, x_arr)
 
-res, x_arr = nesterov([150,75], 0.012, g)
-contour(X,Y,Z, x_arr)
+# res, x_arr = nesterov([150,75], 0.012, g)
+# contour(X,Y,Z, x_arr)
