@@ -4,8 +4,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 max_steps = 1000
 learning_rate = 0.001
 dropout = 0.9
-data_dir = "/Users/xingoo/PycharmProjects/ml-in-action/读书笔记《TensorFlow实战》/第九章-TensorBoard多GPU并行及分布式并行/data"
-log_dir = "/Users/xingoo/PycharmProjects/ml-in-action/读书笔记《TensorFlow实战》/第九章-TensorBoard多GPU并行及分布式并行/logs"
+# data_dir = "/Users/xingoo/PycharmProjects/ml-in-action/读书笔记《TensorFlow实战》/第九章-TensorBoard多GPU并行及分布式并行/data"
+# log_dir = "/Users/xingoo/PycharmProjects/ml-in-action/读书笔记《TensorFlow实战》/第九章-TensorBoard多GPU并行及分布式并行/logs"
 
 mnist = input_data.read_data_sets(data_dir, one_hot=True)
 sess = tf.InteractiveSession()
