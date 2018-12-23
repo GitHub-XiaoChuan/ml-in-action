@@ -9,7 +9,7 @@ x = tf.add(a, b, name="add")
 y = tf.multiply(a, b, name="mul")
 
 with tf.Session() as sess:
-    writer = tf.summary.FileWriter('./graphs5', sess.graph)
+    writer = tf.summary.FileWriter('./graphs', sess.graph)
     x, y = sess.run([x, y])
     print(x)
     print(y)

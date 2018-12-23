@@ -9,7 +9,9 @@ x = tf.add(a, b)
 # 执行命令 tensorboard --logdir=/Users/xingoo/PycharmProjects/ml-in-action/实践-tensorflow/03-stanford/graphs
 
 with tf.Session() as sess:
-    writer = tf.summary.FileWriter('./graphs1', sess.graph)
+    print(sess.graph.as_graph_def())
+
+    writer = tf.summary.FileWriter('./graphs', sess.graph)
     print(sess.run(x))
 
 writer.close()
