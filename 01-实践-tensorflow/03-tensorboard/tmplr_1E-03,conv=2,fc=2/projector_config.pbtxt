@@ -1,0 +1,9 @@
+embeddings {
+  tensor_name: "test_embedding:0"
+  metadata_path: "/Users/xingoo/PycharmProjects/ml-in-action/\345\256\236\350\267\265-tensorflow/03-tensorboard/labels_1024.tsv"
+  sprite {
+    image_path: "/Users/xingoo/PycharmProjects/ml-in-action/\345\256\236\350\267\265-tensorflow/03-tensorboard/sprite_1024.png"
+    single_image_dim: 28
+    single_image_dim: 28
+  }
+}
