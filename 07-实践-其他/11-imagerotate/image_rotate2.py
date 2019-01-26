@@ -2,7 +2,7 @@ import numpy as np
 import argparse
 import cv2
 
-image = cv2.imread('/Users/xingoo/PycharmProjects/ocr/test_images/9.jpg')
+image = cv2.imread('9.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 gray = cv2.bitwise_not(gray)
 
