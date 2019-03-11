@@ -48,6 +48,10 @@ def radon_angle(img, angle_split=5):
 path = '/Users/xingoo/Desktop/img/1551681101.7306502.jpg'
 path = '/Users/xingoo/Desktop/img/1551681020.594172.jpg'
 path = '/Users/xingoo/Desktop/img/1551680929.439567.jpg'
+path = '/Users/xingoo/PycharmProjects/ml-in-action/07-实践-其他/36-身份证识别预处理/1.jpg'
+path = '/Users/xingoo/PycharmProjects/ml-in-action/07-实践-其他/36-身份证识别预处理/3.jpeg'
+path = '/Users/xingoo/PycharmProjects/ml-in-action/07-实践-其他/36-身份证识别预处理/4.jpg'
+path = '/Users/xingoo/Desktop/img/1551944514.549011final.jpg'
 #path = '/Users/xingoo/Downloads/Jietu20190304-152230.jpg'
 
 img = cv2.imread(path)
@@ -72,8 +76,8 @@ blurred = cv2.blur(gradient, (3, 3)) # 9*9的核做模糊
 (_, thresh) = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY)
 #cv2.imshow("binary", thresh)
 
-closed = cv2.erode(thresh, None, iterations=1)
-closed = cv2.dilate(closed, None, iterations=1)
+closed = cv2.erode(thresh, None, iterations=3)
+closed = cv2.dilate(closed, None, iterations=2)
 #cv2.imshow("f", closed)
 
 thresh = closed
