@@ -11,12 +11,42 @@ fashion_mnist = keras.datasets.fashion_mnist
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
+# 探索数据
+
+# (60000, 28, 28)
+print(train_images.shape)
+# 60000
+print(len(train_labels))
+
+# (10000, 28, 28)
+print(test_images.shape)
+# 10000
+print(len(test_labels))
+
+
+# 显示一张图
+plt.figure()
+plt.imshow(train_images[10])
+plt.colorbar()
+plt.grid(False)
+plt.show()
+
 # 显示25张图片
 train_images = train_images / 255.0
 test_images = test_images / 255.0
 
+plt.figure()
+for i in range(25):
+    plt.subplot(5, 5, i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.binary)
+    plt.xlabel(class_names[train_labels[i]])
+plt.show()
+
 model = keras.Sequential([
-    # 图像从28*28转为784的一维
+    # 图像从28*28转为784的一维，并没有参数只是改变形状
     keras.layers.Flatten(input_shape=(28, 28)),
     # 第二层128个神经元节点
     keras.layers.Dense(128, activation=tf.nn.relu),
